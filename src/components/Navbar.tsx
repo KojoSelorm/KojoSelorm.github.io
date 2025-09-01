@@ -16,9 +16,9 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
+          <div className="flex items-center flex-shrink-0">
             <img 
               src="/lovable-uploads/c68796b4-ec71-480b-83c0-182121316d5d.png" 
               alt="HAMMAH Engineering Company Logo" 
@@ -31,8 +31,8 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-8">
+          <div className="hidden md:flex items-center flex-1 justify-center">
+            <div className="flex items-center space-x-8">
               {navItems.map((item) => (
                 <a
                   key={item.name}
@@ -46,7 +46,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Contact Info */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-4 flex-shrink-0">
             <div className="flex items-center text-sm text-muted-foreground">
               <Phone className="h-4 w-4 mr-2" />
               <span>+233 XX XXX XXXX</span>
