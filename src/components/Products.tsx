@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ArrowRight, Cog, Factory, Wrench, Truck } from "lucide-react";
 import foodProcessingImage from "@/assets/food-processing-equipment.jpg";
 import catamaranImage from "@/assets/catamaran-boat.jpg";
+import electromechanicalImage from "@/assets/electromechanical-systems.jpg";
+import industrialEquipmentImage from "@/assets/industrial-equipment.jpg";
 
 const Products = () => {
   const productCategories = [
@@ -24,14 +26,14 @@ const Products = () => {
       icon: Cog,
       title: "Electromechanical Systems",
       description: "Comprehensive electrical and mechanical engineering solutions for industrial applications",
-      image: null,
+      image: electromechanicalImage,
       features: ["System Design", "Installation", "Maintenance", "Consultancy"]
     },
     {
       icon: Wrench,
       title: "Industrial Equipment",
       description: "Specialized machinery and equipment for various industrial and agricultural applications",
-      image: null,
+      image: industrialEquipmentImage,
       features: ["Soap Making Equipment", "Agricultural Machinery", "Custom Solutions", "After-sales Support"]
     }
   ];
