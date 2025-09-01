@@ -18,9 +18,16 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-primary">MCHAMMAH</h1>
-            <p className="text-xs text-muted-foreground -mt-1">Engineering Company Ltd</p>
+          <div className="flex-shrink-0 flex items-center">
+            <img 
+              src="/lovable-uploads/c68796b4-ec71-480b-83c0-182121316d5d.png" 
+              alt="HAMMAH Engineering Company Logo" 
+              className="h-10 w-auto mr-3"
+            />
+            <div>
+              <h1 className="text-xl font-bold text-primary">MCHAMMAH</h1>
+              <p className="text-xs text-muted-foreground -mt-1">Engineering Company Ltd</p>
+            </div>
           </div>
 
           {/* Desktop Navigation */}
