@@ -46,11 +46,7 @@ const Navbar = () => {
           </div>
 
           {/* Desktop Contact Info */}
-          <div className="hidden md:flex items-center space-x-4 flex-shrink-0">
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Phone className="h-4 w-4 mr-2" />
-              <span>+233 XX XXX XXXX</span>
-            </div>
+          <div className="hidden md:flex items-center flex-shrink-0">
             <Button variant="default" size="sm" className="btn-hero">
               Get Quote
             </Button>
