@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Phone, Mail } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,9 +21,9 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center flex-shrink-0">
             <img 
-              src="/lovable-uploads/c68796b4-ec71-480b-83c0-182121316d5d.png" 
-              alt="HAMMAH Engineering Company Logo" 
-              className="h-10 w-auto mr-3"
+              src={logo} 
+              alt="MCHAMMAH Engineering Company Logo" 
+              className="h-12 w-auto mr-3"
             />
             <div>
               <h1 className="text-xl font-bold text-primary">MCHAMMAH</h1>

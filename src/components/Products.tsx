@@ -1,10 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Cog, Factory, Wrench, Truck } from "lucide-react";
-import foodProcessingImage from "@/assets/food-processing-equipment.jpg";
-import catamaranImage from "@/assets/catamaran-boat.jpg";
-import electromechanicalImage from "@/assets/electromechanical-systems.jpg";
-import industrialEquipmentImage from "@/assets/industrial-equipment.jpg";
+import product1 from "@/assets/product-1.jpg";
+import product2 from "@/assets/product-2.jpg";
+import product3 from "@/assets/product-3.jpg";
+import product4 from "@/assets/product-4.jpg";
+import product5 from "@/assets/product-5.jpg";
+import product6 from "@/assets/product-6.jpg";
+import product7 from "@/assets/product-7.jpg";
+import product8 from "@/assets/product-8.jpg";
+import product9 from "@/assets/product-9.jpg";
 
 const Products = () => {
   const productCategories = [
@@ -12,29 +17,64 @@ const Products = () => {
       icon: Factory,
       title: "Food Processing Machinery",
       description: "Industrial-grade equipment for food production, processing, and packaging solutions",
-      image: foodProcessingImage,
+      image: product1,
       features: ["Industrial Mixers", "Conveyor Systems", "Processing Lines", "Packaging Equipment"]
     },
     {
-      icon: Truck,
-      title: "Marine Manufacturing",
-      description: "Custom boat building and marine equipment manufacturing with precision craftsmanship",
-      image: catamaranImage,
-      features: ["Catamaran Boats", "Marine Components", "Custom Designs", "Quality Craftsmanship"]
-    },
-    {
-      icon: Cog,
-      title: "Electromechanical Systems",
-      description: "Comprehensive electrical and mechanical engineering solutions for industrial applications",
-      image: electromechanicalImage,
-      features: ["System Design", "Installation", "Maintenance", "Consultancy"]
+      icon: Factory,
+      title: "Soap Making Equipment",
+      description: "Custom soap processing and manufacturing equipment for industrial production",
+      image: product2,
+      features: ["Mixing Tanks", "Heating Systems", "Processing Units", "Custom Solutions"]
     },
     {
       icon: Wrench,
-      title: "Industrial Equipment",
-      description: "Specialized machinery and equipment for various industrial and agricultural applications",
-      image: industrialEquipmentImage,
-      features: ["Soap Making Equipment", "Agricultural Machinery", "Custom Solutions", "After-sales Support"]
+      title: "Industrial Drilling Equipment",
+      description: "High-precision drilling and machining equipment for industrial applications",
+      image: product3,
+      features: ["Precision Drilling", "Custom Machining", "Industrial Tools", "Equipment Maintenance"]
+    },
+    {
+      icon: Factory,
+      title: "Bottling & Filling Systems",
+      description: "Automated bottling and filling equipment for liquid product manufacturing",
+      image: product4,
+      features: ["Automated Filling", "Bottling Lines", "Quality Control", "Packaging Solutions"]
+    },
+    {
+      icon: Cog,
+      title: "Conveyor Systems",
+      description: "Industrial conveyor and material handling systems for production lines",
+      image: product5,
+      features: ["Belt Conveyors", "Material Handling", "Custom Design", "System Integration"]
+    },
+    {
+      icon: Factory,
+      title: "Milling & Grinding Equipment",
+      description: "Heavy-duty milling and grinding machinery for agricultural and industrial use",
+      image: product6,
+      features: ["Grain Mills", "Industrial Grinders", "Processing Systems", "Custom Solutions"]
+    },
+    {
+      icon: Factory,
+      title: "Industrial Ovens & Dryers",
+      description: "Commercial-grade ovens and drying equipment for food and industrial processing",
+      image: product7,
+      features: ["Industrial Ovens", "Drying Systems", "Temperature Control", "Energy Efficient"]
+    },
+    {
+      icon: Factory,
+      title: "Food Processing Lines",
+      description: "Complete food processing systems with advanced control and automation",
+      image: product8,
+      features: ["Processing Lines", "Automation Systems", "Quality Assurance", "Turnkey Solutions"]
+    },
+    {
+      icon: Wrench,
+      title: "Hydraulic Press Systems",
+      description: "High-capacity hydraulic press equipment for industrial manufacturing",
+      image: product9,
+      features: ["Hydraulic Presses", "Industrial Forming", "Custom Tooling", "Safety Systems"]
     }
   ];
 
@@ -59,7 +99,7 @@ const Products = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {productCategories.map((product, index) => (
             <Card key={index} className="card-product group">
               {product.image && (
