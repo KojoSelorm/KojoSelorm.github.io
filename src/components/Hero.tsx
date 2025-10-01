@@ -57,7 +57,7 @@ const Hero = () => {
                 Request a Quote
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button variant="outline" size="lg" className="btn-secondary">
+              <Button size="lg" className="btn-outline-accent">
                 Explore Products
               </Button>
             </div>
