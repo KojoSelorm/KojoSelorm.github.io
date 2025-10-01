@@ -14,6 +14,19 @@ const Navbar = () => {
     { name: "Contact", href: "#contact" },
   ];
 
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const navbarHeight = 64;
+      const targetPosition = section.offsetTop - navbarHeight;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
+    }
+    setIsMenuOpen(false);
+  };
+
   return (
     <nav className="fixed top-0 w-full bg-background/95 backdrop-blur-sm border-b border-border z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,20 +48,20 @@ const Navbar = () => {
           <div className="hidden md:flex items-center flex-1 justify-center">
             <div className="flex items-center space-x-8">
               {navItems.map((item) => (
-                <a
+                <button
                   key={item.name}
-                  href={item.href}
+                  onClick={() => scrollToSection(item.href.replace('#', ''))}
                   className="text-foreground hover:text-primary px-3 py-2 text-sm font-medium transition-colors duration-200"
                 >
                   {item.name}
-                </a>
+                </button>
               ))}
             </div>
           </div>
 
           {/* Desktop Contact Info */}
           <div className="hidden md:flex items-center flex-shrink-0">
-            <Button variant="default" size="sm" className="btn-hero">
+            <Button variant="default" size="sm" className="btn-hero" onClick={() => scrollToSection('contact')}>
               Get Quote
             </Button>
           </div>
@@ -74,17 +87,16 @@ const Navbar = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-card border-t">
               {navItems.map((item) => (
-                <a
+                <button
                   key={item.name}
-                  href={item.href}
-                  className="text-foreground hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200"
-                  onClick={() => setIsMenuOpen(false)}
+                  onClick={() => scrollToSection(item.href.replace('#', ''))}
+                  className="text-foreground hover:text-primary block px-3 py-2 text-base font-medium transition-colors duration-200 w-full text-left"
                 >
                   {item.name}
-                </a>
+                </button>
               ))}
               <div className="pt-4 border-t">
-                <Button variant="default" size="sm" className="w-full btn-hero">
+                <Button variant="default" size="sm" className="w-full btn-hero" onClick={() => scrollToSection('contact')}>
                   Get Quote
                 </Button>
               </div>

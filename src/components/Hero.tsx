@@ -3,6 +3,18 @@ import { ArrowRight, Award, Users, Zap } from "lucide-react";
 import heroImage from "@/assets/hero-manufacturing.jpg";
 
 const Hero = () => {
+  const scrollToSection = (sectionId: string) => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const navbarHeight = 64;
+      const targetPosition = section.offsetTop - navbarHeight;
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Image with Overlay */}
@@ -53,11 +65,11 @@ const Hero = () => {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="btn-hero group">
+              <Button size="lg" className="btn-hero group" onClick={() => scrollToSection('contact')}>
                 Request a Quote
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
-              <Button size="lg" className="btn-outline-accent">
+              <Button size="lg" className="btn-outline-accent" onClick={() => scrollToSection('products')}>
                 Explore Products
               </Button>
             </div>
