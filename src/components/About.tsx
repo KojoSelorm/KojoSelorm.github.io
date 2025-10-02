@@ -1,9 +1,36 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Award, Heart, Target, Users } from "lucide-react";
+import { Award, Heart, Target, Users, User } from "lucide-react";
 import ceoImage from "@/assets/ceo-portrait.jpg";
 
 const About = () => {
+  const managementTeam = [
+    {
+      name: "Engr. Ebenezer Kakrah Hammah",
+      title: "Chief Executive Officer",
+      description: "Visionary leader with over two decades of experience in electromechanical engineering and manufacturing excellence.",
+      image: ceoImage
+    },
+    {
+      name: "Leadership Team Member",
+      title: "Chief Operations Officer",
+      description: "Expert in operational excellence and manufacturing process optimization.",
+      image: null
+    },
+    {
+      name: "Leadership Team Member",
+      title: "Technical Director",
+      description: "Specialized in electromechanical systems and innovation development.",
+      image: null
+    },
+    {
+      name: "Leadership Team Member",
+      title: "Business Development Director",
+      description: "Driving strategic growth and industry partnerships across West Africa.",
+      image: null
+    }
+  ];
+
   const achievements = [
     {
       icon: Award,
@@ -76,26 +103,36 @@ const About = () => {
 
           {/* Leadership & Achievements */}
           <div className="space-y-8">
-            {/* CEO Section */}
-            <Card className="card-professional">
-              <CardHeader>
-                <div className="flex items-start space-x-4">
-                  <img
-                    src={ceoImage}
-                    alt="Engr. Ebenezer Kakrah Hammah - CEO"
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
-                  <div>
-                    <CardTitle className="text-lg">Engr. Ebenezer Kakrah Hammah</CardTitle>
-                    <p className="text-primary font-medium">Chief Executive Officer</p>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      Visionary leader with over two decades of experience in electromechanical 
-                      engineering and manufacturing excellence.
-                    </p>
-                  </div>
-                </div>
-              </CardHeader>
-            </Card>
+            {/* Leadership Team Section */}
+            <div>
+              <h3 className="text-2xl font-bold mb-6">Leadership Team</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {managementTeam.map((member, index) => (
+                  <Card key={index} className="card-professional">
+                    <CardContent className="pt-6">
+                      <div className="flex flex-col items-center text-center">
+                        {member.image ? (
+                          <img
+                            src={member.image}
+                            alt={`${member.name} - ${member.title}`}
+                            className="w-20 h-20 rounded-full object-cover mb-4"
+                          />
+                        ) : (
+                          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                            <User className="h-10 w-10 text-primary" />
+                          </div>
+                        )}
+                        <h4 className="font-semibold text-base mb-1">{member.name}</h4>
+                        <p className="text-primary font-medium text-sm mb-2">{member.title}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {member.description}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
 
             {/* Achievements Grid */}
             <div className="grid grid-cols-2 gap-4">
