@@ -9,17 +9,17 @@ const Contact = () => {
     {
       icon: MapPin,
       title: "Visit Our Facility",
-      details: ["Industrial Area, Accra", "Manufacturing & Office Complex", "Ghana"]
+      details: ["KWASHIEMAN NEAR MIGHTY TRANSPORT", "Accra, Ghana"]
     },
     {
       icon: Phone,
       title: "Call Us",
-      details: ["+233 XX XXX XXXX", "+233 XX XXX XXXX", "24/7 Emergency Support"]
+      details: ["024 352 7283"]
     },
     {
       icon: Mail,
       title: "Email Us",
-      details: ["info@mchammah.com", "sales@mchammah.com", "support@mchammah.com"]
+      details: ["mchammahengineering@gmail.com", "info@mchammahengineering.com"]
     },
     {
       icon: Clock,
