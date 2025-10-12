@@ -96,19 +96,22 @@ const Footer = () => {
               <div className="flex items-start space-x-3">
                 <MapPin className="h-5 w-5 mt-0.5 opacity-60" />
                 <div className="text-sm">
-                  <p className="opacity-80">Industrial Area, Accra</p>
-                  <p className="opacity-80">Ghana</p>
+                  <p className="opacity-80">KWASHIEMAN NEAR MIGHTY TRANSPORT</p>
+                  <p className="opacity-80">Accra, Ghana</p>
                 </div>
               </div>
               
               <div className="flex items-center space-x-3">
                 <Phone className="h-5 w-5 opacity-60" />
-                <p className="text-sm opacity-80">+233 XX XXX XXXX</p>
+                <p className="text-sm opacity-80">024 352 7283</p>
               </div>
               
-              <div className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 opacity-60" />
-                <p className="text-sm opacity-80">info@mchammah.com</p>
+              <div className="flex items-start space-x-3">
+                <Mail className="h-5 w-5 mt-0.5 opacity-60" />
+                <div className="text-sm space-y-1">
+                  <p className="opacity-80">mchammahengineering@gmail.com</p>
+                  <p className="opacity-80">info@mchammahengineering.com</p>
+                </div>
               </div>
             </div>
 
