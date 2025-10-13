@@ -187,17 +187,24 @@ serve(async (req) => {
             if (fullResponse.includes('LEAD_CAPTURED:')) {
               const leadMatch = fullResponse.match(/LEAD_CAPTURED: (.+), (.+), (.+), (.+), (.+), (.+)/);
               if (leadMatch) {
-                await supabase
+                const { data, error: leadError } = await supabase
                   .from('chat_leads')
                   .insert({
                     conversation_id: convId,
-                    full_name: leadMatch[1],
-                    email: leadMatch[2],
-                    phone: leadMatch[3],
-                    company_name: leadMatch[4] !== 'N/A' ? leadMatch[4] : null,
-                    service_interest: leadMatch[5],
-                    project_details: leadMatch[6]
+                    full_name: leadMatch[1].trim(),
+                    email: leadMatch[2].trim(),
+                    phone: leadMatch[3].trim(),
+                    company_name: leadMatch[4] !== 'N/A' ? leadMatch[4].trim() : null,
+                    service_interest: leadMatch[5].trim(),
+                    project_details: leadMatch[6].trim(),
+                    intent: 'quote'
                   });
+
+                if (leadError) {
+                  console.error('Failed to save lead:', leadError);
+                } else {
+                  console.log('Lead captured successfully:', data);
+                }
 
                 await supabase
                   .from('chat_conversations')

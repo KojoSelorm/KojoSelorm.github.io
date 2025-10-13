@@ -3,8 +3,49 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
+import { useState } from "react";
+import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+// Validation schema for quote requests
+const quoteRequestSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(2, 'Name must be at least 2 characters')
+    .max(100, 'Name must be less than 100 characters'),
+  email: z.string()
+    .trim()
+    .email('Invalid email address')
+    .max(255, 'Email too long'),
+  phone: z.string()
+    .trim()
+    .regex(/^\+?[0-9\s-]{10,20}$/, 'Invalid phone number format')
+    .optional()
+    .or(z.literal('')),
+  company: z.string()
+    .trim()
+    .max(200, 'Company name too long')
+    .optional()
+    .or(z.literal('')),
+  service_interest: z.string()
+    .min(1, 'Please select a service'),
+  project_details: z.string()
+    .trim()
+    .min(20, 'Please provide at least 20 characters')
+    .max(2000, 'Message too long (max 2000 characters)')
+});
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    service_interest: '',
+    project_details: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const contactInfo = [
     {
       icon: MapPin,
@@ -27,6 +68,54 @@ const Contact = () => {
       details: ["Mon - Fri: 8:00 AM - 6:00 PM", "Saturday: 9:00 AM - 4:00 PM", "Sunday: Emergency Only"]
     }
   ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      // Validate form data
+      const validatedData = quoteRequestSchema.parse(formData);
+
+      // Submit to Supabase
+      const { error } = await supabase
+        .from('quote_requests')
+        .insert([{
+          name: validatedData.name,
+          email: validatedData.email,
+          phone: validatedData.phone || null,
+          company: validatedData.company || null,
+          service_interest: validatedData.service_interest,
+          project_details: validatedData.project_details
+        }]);
+
+      if (error) throw error;
+
+      toast.success('Quote request sent successfully! We\'ll contact you within 24 hours.');
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        service_interest: '',
+        project_details: ''
+      });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        toast.error(err.errors[0].message);
+      } else {
+        toast.error('Failed to send quote request. Please try again.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
   return (
     <section id="contact" className="py-20 bg-background">
@@ -85,57 +174,97 @@ const Contact = () => {
                 </p>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Full Name *</label>
-                    <Input placeholder="Enter your full name" />
+                <form onSubmit={handleSubmit}>
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Full Name *</label>
+                      <Input 
+                        placeholder="Enter your full name" 
+                        value={formData.name}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Company</label>
+                      <Input 
+                        placeholder="Your company name" 
+                        value={formData.company}
+                        onChange={(e) => handleInputChange('company', e.target.value)}
+                      />
+                    </div>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Company</label>
-                    <Input placeholder="Your company name" />
+
+                  <div className="grid md:grid-cols-2 gap-4 mb-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Email Address *</label>
+                      <Input 
+                        type="email" 
+                        placeholder="your.email@company.com" 
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Phone Number</label>
+                      <Input 
+                        placeholder="+233 XX XXX XXXX" 
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Email Address *</label>
-                    <Input type="email" placeholder="your.email@company.com" />
+                  <div className="space-y-2 mb-4">
+                    <label className="text-sm font-medium">Service Interest *</label>
+                    <select 
+                      className="w-full p-3 border border-input rounded-md bg-background"
+                      value={formData.service_interest}
+                      onChange={(e) => handleInputChange('service_interest', e.target.value)}
+                      required
+                    >
+                      <option value="">Select service type</option>
+                      <option>Food Processing Equipment</option>
+                      <option>Marine Manufacturing</option>
+                      <option>Industrial Machinery</option>
+                      <option>Electromechanical Systems</option>
+                      <option>Consultation Services</option>
+                      <option>Custom Solutions</option>
+                    </select>
                   </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Phone Number</label>
-                    <Input placeholder="+233 XX XXX XXXX" />
+
+                  <div className="space-y-2 mb-6">
+                    <label className="text-sm font-medium">Project Details *</label>
+                    <Textarea 
+                      placeholder="Please describe your project requirements, timeline, and any specific needs..."
+                      rows={5}
+                      value={formData.project_details}
+                      onChange={(e) => handleInputChange('project_details', e.target.value)}
+                      required
+                    />
                   </div>
-                </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Service Interest</label>
-                  <select className="w-full p-3 border border-input rounded-md bg-background">
-                    <option>Select service type</option>
-                    <option>Food Processing Equipment</option>
-                    <option>Marine Manufacturing</option>
-                    <option>Industrial Machinery</option>
-                    <option>Electromechanical Systems</option>
-                    <option>Consultation Services</option>
-                    <option>Custom Solutions</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Project Details *</label>
-                  <Textarea 
-                    placeholder="Please describe your project requirements, timeline, and any specific needs..."
-                    rows={5}
-                  />
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button size="lg" className="btn-hero flex-1">
-                    Send Quote Request
-                  </Button>
-                  <Button variant="outline" size="lg" className="btn-secondary">
-                    Schedule Call
-                  </Button>
-                </div>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <Button 
+                      type="submit" 
+                      size="lg" 
+                      className="btn-hero flex-1"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? 'Sending...' : 'Send Quote Request'}
+                    </Button>
+                    <Button 
+                      type="button"
+                      variant="outline" 
+                      size="lg" 
+                      className="btn-secondary"
+                      onClick={() => window.location.href = 'tel:+233243527283'}
+                    >
+                      Schedule Call
+                    </Button>
+                  </div>
+                </form>
 
                 <p className="text-sm text-muted-foreground">
                   * Required fields. We respect your privacy and will never share your information.

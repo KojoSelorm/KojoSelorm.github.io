@@ -41,6 +41,53 @@ export type Database = {
         }
         Relationships: []
       }
+      chat_leads: {
+        Row: {
+          company_name: string | null
+          conversation_id: string
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          intent: string | null
+          phone: string
+          project_details: string
+          service_interest: string
+        }
+        Insert: {
+          company_name?: string | null
+          conversation_id: string
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          intent?: string | null
+          phone: string
+          project_details: string
+          service_interest: string
+        }
+        Update: {
+          company_name?: string | null
+          conversation_id?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          intent?: string | null
+          phone?: string
+          project_details?: string
+          service_interest?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_leads_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_messages: {
         Row: {
           content: string
@@ -184,14 +231,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "admin" | "user"
       conversation_status: "active" | "closed" | "escalated"
       message_type: "user" | "assistant" | "system"
     }
@@ -321,6 +396,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "user"],
       conversation_status: ["active", "closed", "escalated"],
       message_type: ["user", "assistant", "system"],
     },
