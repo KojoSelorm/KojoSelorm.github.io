@@ -103,7 +103,7 @@ const Products = () => {
           {productCategories.map((product, index) => (
             <Card key={index} className="card-product group">
               {product.image && (
-                <div className="relative h-48 overflow-hidden">
+                <div className="h-48 overflow-hidden">
                   <img
                     src={product.image}
                     alt={product.title}
@@ -112,8 +112,8 @@ const Products = () => {
                 </div>
               )}
               
-              <CardHeader className="pt-5">
-                <div className="flex items-center space-x-3 mb-3">
+              <CardHeader className="bg-card pt-6">
+                <div className="flex items-center gap-3 mb-3">
                   <div className="p-2 bg-primary/10 rounded-lg shrink-0">
                     <product.icon className="h-6 w-6 text-primary" />
                   </div>
