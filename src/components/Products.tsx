@@ -112,12 +112,12 @@ const Products = () => {
                 </div>
               )}
               
-              <CardHeader className={product.image ? "relative -mt-8 z-10" : ""}>
+              <CardHeader className="pt-5">
                 <div className="flex items-center space-x-3 mb-3">
-                  <div className="p-2 bg-primary/10 rounded-lg">
+                  <div className="p-2 bg-primary/10 rounded-lg shrink-0">
                     <product.icon className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle className="text-xl">{product.title}</CardTitle>
+                  <CardTitle className="text-lg leading-tight">{product.title}</CardTitle>
                 </div>
                 <CardDescription className="text-base">
                   {product.description}
