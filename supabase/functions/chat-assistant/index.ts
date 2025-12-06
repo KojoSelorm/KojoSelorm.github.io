@@ -141,7 +141,9 @@ serve(async (req) => {
       async start(controller) {
         const reader = response.body?.getReader();
         const decoder = new TextDecoder();
+        const encoder = new TextEncoder();
         let fullResponse = '';
+        let buffer = '';
 
         if (!reader) {
           controller.close();
@@ -153,24 +155,47 @@ serve(async (req) => {
             const { done, value } = await reader.read();
             if (done) break;
 
-            const chunk = decoder.decode(value);
-            const lines = chunk.split('\n');
+            const chunk = decoder.decode(value, { stream: true });
+            buffer += chunk;
 
-            for (const line of lines) {
-              if (line.startsWith('data: ') && line !== 'data: [DONE]') {
+            // Process complete lines only
+            let newlineIndex;
+            while ((newlineIndex = buffer.indexOf('\n')) !== -1) {
+              const line = buffer.slice(0, newlineIndex);
+              buffer = buffer.slice(newlineIndex + 1);
+
+              if (line.startsWith('data: ') && line.trim() !== 'data: [DONE]') {
                 const data = line.slice(6);
                 try {
                   const parsed = JSON.parse(data);
                   const content = parsed.choices?.[0]?.delta?.content;
                   if (content) {
                     fullResponse += content;
-                    controller.enqueue(value);
                   }
                 } catch (e) {
                   // Skip invalid JSON
                 }
               }
+
+              // Forward each line individually
+              controller.enqueue(encoder.encode(line + '\n'));
             }
+          }
+
+          // Process any remaining buffer
+          if (buffer.trim()) {
+            if (buffer.startsWith('data: ') && buffer.trim() !== 'data: [DONE]') {
+              try {
+                const parsed = JSON.parse(buffer.slice(6));
+                const content = parsed.choices?.[0]?.delta?.content;
+                if (content) {
+                  fullResponse += content;
+                }
+              } catch (e) {
+                // Skip invalid JSON
+              }
+            }
+            controller.enqueue(encoder.encode(buffer + '\n'));
           }
 
           // Save assistant response
