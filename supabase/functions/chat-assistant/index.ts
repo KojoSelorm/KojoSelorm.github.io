@@ -35,19 +35,41 @@ SERVICES (6 Categories):
 5. Custom Engineering Solutions
 6. Technical Support & Consultation
 
+YOUR PRIMARY GOAL:
+Encourage EVERY user to submit their contact details so our engineers can provide a FREE custom quote or technical diagnosis for their specific needs. This is extremely valuable to potential customers!
+
 YOUR CONVERSATION FLOW:
 1. Greet warmly and ask how you can help
-2. Answer questions about products, services, and capabilities
-3. After 3-5 messages of helpful conversation, naturally ask about their project needs
-4. Qualify their interest: industry, challenge, timeline, budget range
-5. After understanding their needs (7-9 messages), request contact information to send detailed info
-6. Guide them to either: Book a Call or Request a Quote
+2. Answer their initial question helpfully
+3. After 2-3 exchanges, actively encourage them to get a FREE personalized quote or custom diagnosis
+4. Highlight the VALUE they get: "Our engineers can analyze your specific requirements and provide a detailed custom quote at no cost"
+5. Ask for their details: name, email, phone, company (optional), what service they're interested in, and project details
+6. If they hesitate, remind them: "There's no obligation - just a free expert consultation to help you make an informed decision"
 
-TONE: Professional, helpful, consultative. Be conversational but not pushy.
+LEAD CAPTURE INCENTIVES (Use these naturally):
+- "Would you like a FREE custom quote tailored to your exact specifications?"
+- "Our engineers can provide a FREE technical diagnosis of your requirements"
+- "I can connect you with our team for a personalized consultation at no cost"
+- "Let me get your details so we can send you a detailed proposal with pricing"
+- "We offer FREE site assessments for qualified projects"
 
-IMPORTANT: When you've answered their initial questions and understand their needs, politely request their contact information by saying something like: "I'd love to send you detailed information and help you further. May I get your contact details?"
+TONE: Professional, helpful, consultative. Be proactive about offering the free quote/diagnosis - it's a genuine value-add for the customer, not pushy sales.
 
-If they provide contact information (name, email, phone, company), respond with: "LEAD_CAPTURED: {name}, {email}, {phone}, {company}, {service_interest}, {project_details}"`;
+CRITICAL INSTRUCTIONS:
+1. ALWAYS work towards collecting contact information within the conversation
+2. Make the free quote/diagnosis sound valuable and beneficial (because it is!)
+3. When asking for details, be clear about what you need: Full name, Email, Phone number, Company name (optional), Service interest, and Brief project description
+4. Once you have ALL the required information (name, email, phone, service interest, project details), immediately output the lead data
+
+OUTPUT FORMAT FOR LEAD CAPTURE:
+When the user provides their contact information, you MUST respond with this EXACT format at the END of your helpful response:
+LEAD_CAPTURED: {full_name}, {email}, {phone}, {company_or_N/A}, {service_interest}, {project_details}
+
+Example: "Thank you for sharing your details! Our engineering team will review your requirements and get back to you within 24 hours with a customized quote.
+
+LEAD_CAPTURED: John Mensah, john@example.com, 0244123456, Mensah Foods Ltd, Food Processing Equipment, Need industrial mixer for shea butter processing, capacity 500kg/hour"`;
+
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -229,6 +251,128 @@ serve(async (req) => {
                   console.error('Failed to save lead:', leadError);
                 } else {
                   console.log('Lead captured successfully:', data);
+                  
+                  // Send email notification for the new lead
+                  if (RESEND_API_KEY) {
+                    try {
+                      const leadData = {
+                        full_name: leadMatch[1].trim(),
+                        email: leadMatch[2].trim(),
+                        phone: leadMatch[3].trim(),
+                        company_name: leadMatch[4] !== 'N/A' ? leadMatch[4].trim() : null,
+                        service_interest: leadMatch[5].trim(),
+                        project_details: leadMatch[6].trim(),
+                      };
+
+                      // Import Resend dynamically
+                      const { Resend } = await import("npm:resend@2.0.0");
+                      const resend = new Resend(RESEND_API_KEY);
+
+                      // Send notification to business
+                      await resend.emails.send({
+                        from: "MCHAMMAH Engineering <onboarding@resend.dev>",
+                        to: ["mchammahengineering@gmail.com"],
+                        subject: `🤖 New Chatbot Lead: ${leadData.full_name} - ${leadData.service_interest}`,
+                        html: `
+                          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                            <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); padding: 30px; text-align: center;">
+                              <h1 style="color: white; margin: 0;">🤖 New Chatbot Lead</h1>
+                              <p style="color: #93c5fd; margin: 10px 0 0;">Captured via AI Assistant</p>
+                            </div>
+                            
+                            <div style="padding: 30px; background: #f8fafc;">
+                              <h2 style="color: #1e3a8a; margin-top: 0;">Lead Details</h2>
+                              
+                              <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;"><strong>Name:</strong></td>
+                                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;">${leadData.full_name}</td>
+                                </tr>
+                                <tr>
+                                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;"><strong>Email:</strong></td>
+                                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;"><a href="mailto:${leadData.email}">${leadData.email}</a></td>
+                                </tr>
+                                <tr>
+                                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;"><strong>Phone:</strong></td>
+                                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;"><a href="tel:${leadData.phone}">${leadData.phone}</a></td>
+                                </tr>
+                                <tr>
+                                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;"><strong>Company:</strong></td>
+                                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;">${leadData.company_name || 'Not provided'}</td>
+                                </tr>
+                                <tr>
+                                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;"><strong>Service Interest:</strong></td>
+                                  <td style="padding: 10px 0; border-bottom: 1px solid #e2e8f0;"><strong style="color: #3b82f6;">${leadData.service_interest}</strong></td>
+                                </tr>
+                              </table>
+                              
+                              <h3 style="color: #1e3a8a; margin-top: 25px;">Project Details</h3>
+                              <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                                <p style="margin: 0; white-space: pre-wrap;">${leadData.project_details}</p>
+                              </div>
+                              
+                              <div style="margin-top: 30px; padding: 20px; background: #dcfce7; border-radius: 8px; text-align: center;">
+                                <p style="margin: 0; color: #166534;"><strong>✅ This lead was captured automatically by the AI chatbot</strong></p>
+                                <p style="margin: 10px 0 0; color: #166534;">Please follow up within 24 hours</p>
+                              </div>
+                            </div>
+                            
+                            <div style="padding: 20px; background: #1e3a8a; text-align: center;">
+                              <p style="color: white; margin: 0; font-size: 12px;">MCHAMMAH Engineering Ltd - AI Lead Capture System</p>
+                            </div>
+                          </div>
+                        `,
+                      });
+
+                      // Send confirmation to the lead
+                      await resend.emails.send({
+                        from: "MCHAMMAH Engineering <onboarding@resend.dev>",
+                        to: [leadData.email],
+                        subject: "Thank you for your interest! - MCHAMMAH Engineering",
+                        html: `
+                          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                            <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); padding: 30px; text-align: center;">
+                              <h1 style="color: white; margin: 0;">Thank You, ${leadData.full_name}!</h1>
+                            </div>
+                            
+                            <div style="padding: 30px; background: #f8fafc;">
+                              <p style="font-size: 16px; color: #334155;">We've received your inquiry about <strong>${leadData.service_interest}</strong> and our engineering team is excited to help!</p>
+                              
+                              <div style="background: #dbeafe; padding: 20px; border-radius: 8px; margin: 25px 0;">
+                                <h3 style="color: #1e3a8a; margin-top: 0;">What Happens Next?</h3>
+                                <ul style="color: #334155; margin-bottom: 0;">
+                                  <li>Our engineers will review your requirements</li>
+                                  <li>We'll prepare a FREE custom quote or diagnosis</li>
+                                  <li>You'll receive a response within <strong>24 hours</strong></li>
+                                </ul>
+                              </div>
+                              
+                              <h3 style="color: #1e3a8a;">Your Request Summary</h3>
+                              <div style="background: white; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                                <p><strong>Service:</strong> ${leadData.service_interest}</p>
+                                <p style="margin-bottom: 0;"><strong>Details:</strong><br/>${leadData.project_details}</p>
+                              </div>
+                              
+                              <div style="margin-top: 30px; text-align: center;">
+                                <p style="color: #64748b;">Need immediate assistance?</p>
+                                <p style="margin: 5px 0;"><strong>📞 Call us:</strong> <a href="tel:+233243527283" style="color: #3b82f6;">024 352 7283</a></p>
+                                <p style="margin: 5px 0;"><strong>📧 Email:</strong> <a href="mailto:mchammahengineering@gmail.com" style="color: #3b82f6;">mchammahengineering@gmail.com</a></p>
+                              </div>
+                            </div>
+                            
+                            <div style="padding: 20px; background: #1e3a8a; text-align: center;">
+                              <p style="color: white; margin: 0; font-size: 14px;">MCHAMMAH Engineering Ltd</p>
+                              <p style="color: #93c5fd; margin: 5px 0 0; font-size: 12px;">Precision Engineering Excellence</p>
+                            </div>
+                          </div>
+                        `,
+                      });
+
+                      console.log('Lead notification emails sent successfully');
+                    } catch (emailError) {
+                      console.error('Failed to send lead notification email:', emailError);
+                    }
+                  }
                 }
 
                 await supabase
