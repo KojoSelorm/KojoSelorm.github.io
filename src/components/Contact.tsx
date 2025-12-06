@@ -91,6 +91,23 @@ const Contact = () => {
 
       if (error) throw error;
 
+      // Send email notifications (non-blocking)
+      try {
+        await supabase.functions.invoke('send-quote-notification', {
+          body: {
+            name: validatedData.name,
+            email: validatedData.email,
+            phone: validatedData.phone || '',
+            company: validatedData.company || '',
+            service_interest: validatedData.service_interest,
+            project_details: validatedData.project_details
+          }
+        });
+      } catch (emailError) {
+        console.error('Email notification failed:', emailError);
+        // Don't block the success flow if email fails
+      }
+
       toast.success('Quote request sent successfully! We\'ll contact you within 24 hours.');
       
       // Reset form
